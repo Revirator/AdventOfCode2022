@@ -1,12 +1,10 @@
+use advent_of_code::reader;
 use regex::Regex;
 use std::fs::File;
 use std::io::{BufReader, Lines};
 
-#[path = "../reader.rs"]
-mod reader;
-
 fn main() {
-    if let Ok(mut lines) = reader::read_lines("./src/bin/day5/input.txt") {
+    if let Ok(mut lines) = reader::read_input_lines("./src/bin/day5/input.txt") {
         let mut stacks = setup_initial_state(&mut lines);
         lines.next();
         for line in lines {

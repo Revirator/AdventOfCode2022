@@ -1,8 +1,7 @@
-#[path = "../reader.rs"]
-mod reader;
+use advent_of_code::reader;
 
 fn main() {
-    if let Ok(lines) = reader::read_lines("./src/bin/day2/input.txt") {
+    if let Ok(lines) = reader::read_input_lines("./src/bin/day2/input.txt") {
         let (mut score_1, mut score_2) = (0, 0);
         for line in lines {
             if let Ok(ip) = line {

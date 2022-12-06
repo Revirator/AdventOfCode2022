@@ -1,8 +1,7 @@
-#[path = "../reader.rs"]
-mod reader;
+use advent_of_code::reader;
 
 fn main() {
-    if let Ok(lines) = reader::read_lines("./src/bin/day1/input.txt") {
+    if let Ok(lines) = reader::read_input_lines("./src/bin/day1/input.txt") {
         let mut max_calories = [-1, -1, -1];
         let mut curr_calories = 0;
         for line in lines {
