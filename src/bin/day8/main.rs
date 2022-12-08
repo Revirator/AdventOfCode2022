@@ -16,15 +16,14 @@ fn main() {
                 let mut check = true;
                 let mut flag = 0;
                 let curr = grid.get(i).unwrap().get(j).unwrap().clone();
-                // check if visible from the left
+                // check if visible from the left and count visible trees
                 let row = grid.get(i).unwrap();
                 let mut trees_left = 0;
                 for m in (0..j).rev() {
                     if row.get(m).unwrap() < &curr {
                         flag += 1;
                         trees_left += 1;
-                    }
-                    if row.get(m).unwrap() >= &curr {
+                    } else {
                         trees_left += 1;
                         break;
                     }
@@ -34,14 +33,13 @@ fn main() {
                     check = false;
                 }
                 flag = 0;
-                // check if visible from the right
+                // check if visible from the right and count visible trees
                 let mut trees_right = 0;
                 for m in j + 1..width {
                     if row.get(m).unwrap() < &curr {
                         flag += 1;
                         trees_right += 1;
-                    }
-                    if row.get(m).unwrap() >= &curr {
+                    } else {
                         trees_right += 1;
                         break;
                     }
@@ -51,14 +49,13 @@ fn main() {
                     check = false;
                 }
                 flag = 0;
-                // check if visible from the top
+                // check if visible from the top and count visible trees
                 let mut trees_top = 0;
                 for m in (0..i).rev() {
                     if grid.get(m).unwrap().get(j).unwrap() < &curr {
                         flag += 1;
                         trees_top += 1;
-                    }
-                    if grid.get(m).unwrap().get(j).unwrap() >= &curr {
+                    } else {
                         trees_top += 1;
                         break;
                     }
@@ -68,14 +65,13 @@ fn main() {
                     check = false;
                 }
                 flag = 0;
-                // check if visible from the bottom
+                // check if visible from the bottom and count visible trees
                 let mut trees_bottom = 0;
                 for m in i + 1..height {
                     if grid.get(m).unwrap().get(j).unwrap() < &curr {
                         flag += 1;
                         trees_bottom += 1;
-                    }
-                    if grid.get(m).unwrap().get(j).unwrap() >= &curr {
+                    } else {
                         trees_bottom += 1;
                         break;
                     }
