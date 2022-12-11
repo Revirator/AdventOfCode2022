@@ -9,6 +9,7 @@ fn main() {
     let input = reader::read_input_to_string("./src/bin/day11/input.txt");
     let lines = input.split("\r\n").collect::<Vec<&str>>();
     let chunks = lines.chunks(7);
+    // (operation, divider, (monkey if true, monkey if false), list of items, number of inspected items)
     let mut monkeys: Vec<(&str, u64, (usize, usize), Vec<u64>, u64)> = Vec::new();
     for chunk in chunks {
         let starting_items = capture_starting_items(chunk[1]);
@@ -53,8 +54,8 @@ fn capture_starting_items(line: &str) -> Vec<u64> {
         .collect::<Vec<u64>>()
 }
 
-fn inspect_item(old: u64, operation: &str, lcm: &u64) -> Option<u64> {
-    if let Number(value) = Expr::new(operation).value("old", old).exec().unwrap() {
+fn inspect_item(item: u64, operation: &str, lcm: &u64) -> Option<u64> {
+    if let Number(value) = Expr::new(operation).value("old", item).exec().unwrap() {
         if IS_PART_2 {
             return Some(value.as_u64().unwrap() % lcm);
         }
