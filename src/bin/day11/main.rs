@@ -9,15 +9,9 @@ fn main() {
     let input = reader::read_input_to_string("./src/bin/day11/input.txt");
     let lines = input.split("\r\n").collect::<Vec<&str>>();
     let chunks = lines.chunks(7);
-    // (operation, divider, (monkey if true, monkey if false), list of items, number of inspected items)
-    let mut monkeys: Vec<(&str, u64, (usize, usize), Vec<u64>, u64)> = Vec::new();
+    let mut monkeys: Vec<Monkey> = Vec::new();
     for chunk in chunks {
-        let starting_items = capture_starting_items(chunk[1]);
-        let operation = chunk[2].split("= ").collect::<Vec<&str>>()[1];
-        let divider = chunk[3].split("by ").collect::<Vec<&str>>()[1].parse::<u64>().unwrap();
-        let if_true = chunk[4].split("monkey ").collect::<Vec<&str>>()[1].parse::<usize>().unwrap();
-        let if_false = chunk[5].split("monkey ").collect::<Vec<&str>>()[1].parse::<usize>().unwrap();
-        monkeys.push((operation, divider, (if_true, if_false), starting_items, 0));
+        monkeys.push(Monkey::parse(chunk));
     }
     let lcm = &monkeys.iter().fold(1, |acc, x| acc * x.1);
     let n = if IS_PART_2 { 10000 } else { 20 };
@@ -25,7 +19,7 @@ fn main() {
         for i in 0..monkeys.len() {
             let monkey = monkeys.get(i).unwrap().clone();
             for item in &monkey.3 {
-                let item = inspect_item(item.clone(), monkey.0, &lcm).unwrap();
+                let item = inspect_item(item.clone(), &monkey.0, &lcm).unwrap();
                 if item % monkey.1 == 0 {
                     monkeys.get_mut(monkey.2.0).unwrap().3.push(item);
                 } else {
@@ -44,17 +38,7 @@ fn main() {
     println!("{}", monkey_business);
 }
 
-fn capture_starting_items(line: &str) -> Vec<u64> {
-    line.split(':')
-        .collect::<Vec<&str>>()[1]
-        .split(',')
-        .collect::<Vec<&str>>()
-        .iter()
-        .map(|s| s.trim().parse::<u64>().unwrap())
-        .collect::<Vec<u64>>()
-}
-
-fn inspect_item(item: u64, operation: &str, lcm: &u64) -> Option<u64> {
+fn inspect_item(item: u64, operation: &String, lcm: &u64) -> Option<u64> {
     if let Number(value) = Expr::new(operation).value("old", item).exec().unwrap() {
         if IS_PART_2 {
             return Some(value.as_u64().unwrap() % lcm);
@@ -62,4 +46,19 @@ fn inspect_item(item: u64, operation: &str, lcm: &u64) -> Option<u64> {
         return Some(value.as_u64().unwrap() / 3);
     }
     None
+}
+
+#[derive(Clone)]
+// (operation, divider, (monkey if true, monkey if false), list of items, number of inspected items)
+struct Monkey(String, u64, (usize, usize), Vec<u64>, u64);
+
+impl Monkey {
+    fn parse(chunk: &[&str]) -> Monkey {
+        let starting_items = chunk[1].split(':').collect::<Vec<&str>>()[1].split(',').collect::<Vec<&str>>().iter().map(|s| s.trim().parse::<u64>().unwrap()).collect::<Vec<u64>>();
+        let operation = chunk[2].split("= ").collect::<Vec<&str>>()[1].to_string();
+        let divider = chunk[3].split("by ").collect::<Vec<&str>>()[1].parse::<u64>().unwrap();
+        let if_true = chunk[4].split("monkey ").collect::<Vec<&str>>()[1].parse::<usize>().unwrap();
+        let if_false = chunk[5].split("monkey ").collect::<Vec<&str>>()[1].parse::<usize>().unwrap();
+        Monkey(operation, divider, (if_true, if_false), starting_items, 0)
+    }
 }
