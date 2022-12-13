@@ -4,13 +4,9 @@ use advent_of_code::reader;
 
 fn main() {
     let input = reader::read_input_to_string("./src/bin/day13/input.txt");
-    let mut lines = input.split("\r\n").collect::<Vec<&str>>()
-        .into_iter()
-        .filter(|l| l.starts_with('['))
-        .collect::<Vec<&str>>();
-    lines.push("[[2]]");
-    lines.push("[[6]]");
-    let chunks = lines.chunks(2);
+    let mut lines = input.split("\r\n").collect::<Vec<&str>>();
+    // part 1
+    let chunks = lines.chunks(3);
     let mut sum = 0;
     for (i, chunk) in chunks.enumerate() {
         let left: Value = serde_json::from_str(chunk[0]).unwrap();
@@ -19,6 +15,12 @@ fn main() {
             sum += i + 1;
         }
     }
+    // part 2
+    lines = lines.into_iter()
+        .filter(|l| l.starts_with('['))
+        .collect::<Vec<&str>>();
+    lines.push("[[2]]");
+    lines.push("[[6]]");
     sort(&mut lines);
     let packet_2 = lines.iter().position(|l| *l == "[[2]]").unwrap();
     let packet_6 = lines.iter().position(|l| *l == "[[6]]").unwrap();
